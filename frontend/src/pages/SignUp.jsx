@@ -4,6 +4,8 @@ import logo from "../assets/logo.png";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
+import { serverUrl } from "../App.jsx";
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
@@ -13,6 +15,18 @@ function SignUp() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [mobile, setMobile] = useState("")
+
+  // signUp functionality
+  const handleSignUp = async() =>{
+    try {
+      const result = await axios.post(`${serverUrl}/api/auth/signup`,{
+        fullName, email, password, mobile, role
+      },{withCredentials:true})
+      console.log(result)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100/20 to-yellow-100/30 md:p-4 sm:p-8">
       <div className="w-full max-w-5xl bg-yellow-50 sm:rounded-xl shadow-2xl grid grid-cols-1 md:grid-cols-2 overflow-hidden">
@@ -90,7 +104,7 @@ function SignUp() {
           ))}
           </div>
           </div>
-          <button className="w-full p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform">
+          <button onClick={handleSignUp} className="w-full p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer">
             Sign Up
           </button>
           <button className="flex justify-center gap-2 border border-orange-500 text-orange-500 rounded-2xl py-2  font-semibold shadow-lg hover:bg-gray-100 hover:scale-105 transition transform cursor-pointer"><FcGoogle className="text-3xl" />SignUp with Google</button>
