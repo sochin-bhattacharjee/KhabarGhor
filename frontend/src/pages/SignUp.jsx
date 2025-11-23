@@ -76,7 +76,7 @@ function SignUp() {
             <label htmlFor="" className="font-medium">Number</label>
           <input
           onChange={(e)=>setMobile(e.target.value)} value={mobile}
-            type="number"
+            type="text"
             placeholder="Mobile Number"
             className="w-full p-4 rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />

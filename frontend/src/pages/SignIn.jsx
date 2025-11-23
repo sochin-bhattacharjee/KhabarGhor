@@ -13,7 +13,18 @@ function SignIn() {
   const [password, setPassword] = useState("")
   const navigate = useNavigate()
 
-  
+  // signIn functionality
+  const handleSignIn = async() =>{
+    try {
+      const result = await axios.post(`${serverUrl}/api/auth/signin`,{
+        email, password
+      },{withCredentials:true})
+      console.log(result.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100/20 to-yellow-100/30 md:p-4 sm:p-8">
       <div className="w-full max-w-5xl bg-yellow-50 sm:rounded-xl shadow-2xl grid grid-cols-1 md:grid-cols-2 overflow-hidden">
@@ -71,7 +82,7 @@ function SignIn() {
             <div></div>
             <p className="text-orange-600 text-right font-medium hover:underline hover:text-blue-700 cursor-pointer" onClick={() => navigate("/forgot-password")}>forgot password</p>
           </div>
-          <button className="w-full p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer">
+          <button onClick={handleSignIn} className="w-full p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer">
             Sign In
           </button>
           <button className="flex justify-center gap-2 border border-orange-500 text-orange-500 rounded-2xl py-2  font-semibold shadow-lg hover:bg-gray-100 hover:scale-105 transition transform cursor-pointer"><FcGoogle className="text-3xl" />SignIn with Google</button>
