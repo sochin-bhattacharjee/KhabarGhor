@@ -40,7 +40,7 @@ function SignUp() {
 
           <h2 className="text-3xl font-bold mb-3">Create Account</h2>
           <p className="text-gray-100 mb-6">
-            Join KhabarGhor and explore fresh, trending food deliveries every day.
+            Already have an account ?
           </p>
           <div>
             <Link to="/signin">
