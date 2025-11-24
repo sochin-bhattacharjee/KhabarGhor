@@ -107,3 +107,21 @@ export const sendOtp = async (req,res) =>{
         return res.status(500).json(`send OTP error ${error}`)
     }
 }
+
+// verify OTP
+export const verifyOtp = async (req,res)=>{
+    try {
+        const {email, otp} = req.body
+        const user = await User.findOne({email})
+        if(!user || user.resetOtp!=otp || user.otpExpires<Date.now()){
+            return res.status(400).json({message:"invalid/expired otp"})
+        }
+        user.isOtpVerified=true
+        user.resetOtp=undefined
+        user.otpExpires=undefined
+        await user.save()
+        return res.status(200).json({message:"OTP Verify successfully"})
+    } catch (error) {
+        return res.status(500).json(`OTP verify error ${error}`)
+    }
+}
