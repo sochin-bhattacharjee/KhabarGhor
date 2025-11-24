@@ -1,7 +1,6 @@
 import User from "../models/user.model.js"
 import bcrypt from "bcryptjs"
 import genToken from "../utils/token.js"
-import User from './../models/user.model.js';
 import { sendOtpMail } from "../utils/mail.js";
 
 // signUp controller

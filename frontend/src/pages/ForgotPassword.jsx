@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.png";
+import axios from 'axios';
+import { serverUrl } from '../App';
 
 function ForgotPassword() {
     const [step, setStep] = useState(1)
@@ -11,6 +13,44 @@ function ForgotPassword() {
     const [newPassword, setNewPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const navigate = useNavigate()
+
+    // forgot password functionality
+    // step 1 -- Send OTP
+    const handleSendOtp= async () =>{
+      try {
+        const result = await axios.post(`${serverUrl}/api/auth/send-otp`,{email},{withCredentials:true})
+        console.log(result)
+        setStep(2)
+      } catch (error) {
+         console.log(error)
+      }
+    }
+
+    // step 2 -- Verify OTP
+    const handleVerifyOtp= async () =>{
+      try {
+        const result = await axios.post(`${serverUrl}/api/auth/verify-otp`,{email,otp},{withCredentials:true})
+        console.log(result)
+        setStep(3)
+      } catch (error) {
+         console.log(error)
+      }
+    }
+    
+    // step 3 -- Reset password
+    const handleResetPassword= async () =>{
+      if(newPassword!=confirmPassword){
+        return null
+      }
+      try {
+        const result = await axios.post(`${serverUrl}/api/auth/reset-password`,{email,newPassword},{withCredentials:true})
+        console.log(result)
+        navigate("/signIn")
+      } catch (error) {
+         console.log(error)
+      }
+    }
+
   return (
     <div className='bg-gradient-to-br from-yellow-100/20 to-yellow-100/30 flex justify-center items-center min-h-screen'>
         <div className='max-w-[300px] md:max-w-5xl bg-yellow-50 sm:rounded-xl shadow-2xl overflow-hidden p-5 md:p-10 rounded-2xl'>
@@ -35,11 +75,12 @@ function ForgotPassword() {
             className="w-full p-3 md:p-4 rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
           </div>
-          <button className='w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer mt-5'>
+          <button onClick={handleSendOtp} className='w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer mt-5'>
             Send OTP
           </button>
           </div>
             }
+
             {/* forgot password step 2 */}
             {step == 2 && 
             <div>
@@ -51,11 +92,12 @@ function ForgotPassword() {
             className="w-full p-3 md:p-4 rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
           </div>
-          <button className='w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer mt-5'>
+          <button onClick={handleVerifyOtp} className='w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer mt-5'>
             Verify
           </button>
           </div>
             }
+
             {/* forgot password step 3 */}
             {step == 3 && 
             <div>
@@ -77,7 +119,7 @@ function ForgotPassword() {
             className="w-full p-3 md:p-4 rounded-xl md:rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
           </div>
-          <button className='w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer mt-5'>
+          <button onClick={handleResetPassword} className='w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer mt-5'>
             Reset Password
           </button>
           </div>
