@@ -18,11 +18,13 @@ function ForgotPassword() {
             <button className='cursor-pointer text-xl md:text-2xl text-orange-600 animate-pulse' onClick={()=>navigate("/signIn")}><FaArrowAltCircleLeft /></button>
                 <h1 className='text-orange-600 text-xl md:text-2xl font-bold'>Forgot Password</h1>
             </div>
+            {/* site name and site logo */}
             <div className="flex items-center space-x-2 md:space-x-4 md:mb-6">
             <img src={logo} alt="Logo" className="w-10 md:w-16 h-16 object-contain" />
             <h1 className="text-xl md:text-4xl font-extrabold">Khabar<span className="bg-gradient-to-b from-neutral-300 to-cyan-500 text-transparent bg-clip-text">Ghor</span></h1>
           </div>
 
+          {/* forgot password step 1 */}
             {step == 1 && 
             <div>
             <div>
@@ -38,6 +40,7 @@ function ForgotPassword() {
           </button>
           </div>
             }
+            {/* forgot password step 2 */}
             {step == 2 && 
             <div>
             <div>
@@ -53,6 +56,7 @@ function ForgotPassword() {
           </button>
           </div>
             }
+            {/* forgot password step 3 */}
             {step == 3 && 
             <div>
             <div className='mb-3'>
