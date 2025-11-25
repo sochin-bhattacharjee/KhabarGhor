@@ -18,11 +18,22 @@ export const signUp = async (req,res) => {
             return res.status(400).json({message:"Please password must be at least 6 characters"})
         }
 
-        // mobile number validation
+        // mobile number step by step validation
+        // step 1 : mobile number length check
         if (mobile.length < 11 || mobile.length > 11) {
-            return res.status(400).json({message:"Mobile number is wrong"})
+            return res.status(400).json({message:"Mobile number must be exactly 11 digits"})
+        }
+        // step 2 : digits only check
+        if (!/^[0-9]+$/.test(mobile)) {
+            return res.status(400).json({message:"Mobile number is must only digit"})
+        }
+        // step 3 : operator check
+        const simOperator = ["013", "014", "015", "016", "017", "018", "019"]
+        if (!simOperator.includes(mobile.slice(0,3))) {
+            return res.status(400).json({message: "Invalid mobile operator code"})
         }
 
+        // hashed password
         const hashedPassword = await bcrypt.hash(password, 10)
         user = await User.create({
             fullName,
