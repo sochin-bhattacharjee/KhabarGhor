@@ -8,14 +8,25 @@ export const signUp = async (req,res) => {
     try {
         const {fullName, email, password, mobile, role} = req.body
         let user = await User.findOne({email})
-        // email validation
+        // user check
         if(user){
             return res.status(400).json({message:"User Already Exist."})
         }
-        
-        // password validation
-        if(password.length<6){
-            return res.status(400).json({message:"Please password must be at least 6 characters"})
+
+        // full name check
+        if(!fullName){
+            return res.status(400).json({message:"Please Enter the fullName"})
+        }
+        // email validation
+        if(!email){
+            return res.status(400).json({message:"Please Enter the email"})
+        }
+        if(!email.includes("@") || !email.includes("gmail.com") || !email.includes("yahoo.com") || !email.includes("outlook.com") || !email.includes("hotmail.com") || !email.includes("icloud.com") || !email.includes("protonmail.com") || !email.includes("aol.com")){
+                return res.status(400).json({message:"Please Enter the Valid email"})
+            }
+        // mobile check
+        if(!mobile){
+            return res.status(400).json({message:"Please Enter the mobile number"})
         }
 
         // mobile number step by step validation
@@ -31,6 +42,11 @@ export const signUp = async (req,res) => {
         const simOperator = ["013", "014", "015", "016", "017", "018", "019"]
         if (!simOperator.includes(mobile.slice(0,3))) {
             return res.status(400).json({message: "Invalid mobile operator code"})
+        }
+
+        // password validation
+        if(password.length<6){
+            return res.status(400).json({message:"Please password must be at least 6 characters"})
         }
 
         // hashed password
@@ -63,8 +79,20 @@ export const signIn = async (req,res) => {
         const {email, password} = req.body
         const user = await User.findOne({email})
         // email validation
+        if(!email){
+            return res.status(400).json({message:"Please Enter the email"})
+        }
+        if(!email.includes("@") || !email.includes("gmail.com") || !email.includes("yahoo.com") || !email.includes("outlook.com") || !email.includes("hotmail.com") || !email.includes("icloud.com") || !email.includes("protonmail.com") || !email.includes("aol.com")){
+                return res.status(400).json({message:"Please Enter the Valid email"})
+            }
+        // email validation
         if(!user){
             return res.status(400).json({message:"User Does not Exist."})
+        }
+
+        // password check
+        if(!password){
+            return res.status(400).json({message:"Please Enter the password"})
         }
 
         const isMatch = await bcrypt.compare(password, user.password)

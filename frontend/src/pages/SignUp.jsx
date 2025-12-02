@@ -18,6 +18,7 @@ function SignUp() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [mobile, setMobile] = useState("")
+  const [error,setError] = useState("")
   const mobileRef = useRef(null)
 
   // signUp functionality
@@ -27,18 +28,20 @@ function SignUp() {
         fullName, email, password, mobile, role
       },{withCredentials:true})
       toast.success("SignUp Successfully")
+      setError("")
     } catch (error) {
-      toast.error("Signup Error")
+      setError(error.response.data.message)
     }
   }
 
   // Google Authentication
   const handleGoogleAuth= async () =>{
         if (!mobile || mobile.length !== 11) {
-            toast.warning("Please Enter the Correct Mobile number")
+            setError("Mobile number is required")
             mobileRef.current.focus();
             return;
         }
+        setError("")
         const provider = new GoogleAuthProvider()
         const result = await signInWithPopup(auth, provider)
         try {
@@ -50,7 +53,7 @@ function SignUp() {
             },{withCredentials:true})
             toast.success("SignUp Successfully")
         } catch (error) {
-            toast.error("Signup Error")
+            setError(error.response.data.message)
         }
     }
 
@@ -87,6 +90,7 @@ function SignUp() {
           onChange={(e)=>setFullName(e.target.value)} value={fullName}
             type="text"
             placeholder="Full Name"
+            required
             className="w-full p-4 rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
           </div>
@@ -96,6 +100,7 @@ function SignUp() {
           onChange={(e)=>setEmail(e.target.value)} value={email}
             type="email"
             placeholder="Email"
+            required
             className="w-full p-4 rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
           </div>
@@ -105,6 +110,7 @@ function SignUp() {
           onChange={(e)=>setMobile(e.target.value)} value={mobile}
           ref={mobileRef}
             type="number"
+            required
             placeholder="Mobile Number"
             className="w-full p-4 rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
@@ -116,6 +122,7 @@ function SignUp() {
             onChange={(e)=>setPassword(e.target.value)} value={password}
             type={`${showPassword ? " text" : "password"}`}
             placeholder="Password"
+            required
             className="w-full p-4 rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
           <button onClick={()=>setShowPassword(!showPassword)} className="absolute top-6.5 right-2.5 cursor-pointer">
@@ -135,6 +142,7 @@ function SignUp() {
           <button onClick={handleSignUp} className="w-full p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer">
             Sign Up
           </button>
+          <p className="text-red-600">{error}</p>
           <button onClick={handleGoogleAuth} className="flex justify-center gap-2 border border-orange-500 text-orange-500 rounded-2xl py-2  font-semibold shadow-lg hover:bg-gray-100 hover:scale-105 transition transform cursor-pointer"><FcGoogle className="text-3xl" />SignUp with Google</button>
         </div>
       </div>

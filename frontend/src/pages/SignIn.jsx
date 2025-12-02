@@ -14,6 +14,7 @@ function SignIn() {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
   const navigate = useNavigate()
 
   // signIn functionality
@@ -22,8 +23,10 @@ function SignIn() {
       const result = await axios.post(`${serverUrl}/api/auth/signin`,{
         email, password
       },{withCredentials:true})
+      setError("")
+      toast.success("SignIn Successfully")
     } catch (error) {
-      console.log(error)
+      setError(error.response.data.message)
     }
   }
 
@@ -35,9 +38,10 @@ function SignIn() {
             const data = await axios.post(`${serverUrl}/api/auth/google-auth`,{
                 email:result.user.email,
             },{withCredentials:true})
-             toast.success("SignIn Successfully")
+            setError("")
+            toast.success("SignIn Successfully")
         } catch (error) {
-            toast.error("Signup Error")
+            setError(error.response.data.message)
         }
     }
 
@@ -52,7 +56,7 @@ function SignIn() {
             <h1 className="text-4xl font-extrabold">Khabar<span className="bg-gradient-to-b from-neutral-50 to-cyan-300 text-transparent bg-clip-text">Ghor</span></h1>
           </div>
 
-          <h2 className="text-3xl font-bold mb-3">Create Account</h2>
+          <h2 className="text-3xl font-bold mb-3">SignIn Account</h2>
           <p className="text-gray-100 mb-6">
             Don't have an account ?
           </p>
@@ -76,6 +80,7 @@ function SignIn() {
             type="email"
             placeholder="Email"
             className="w-full p-4 rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
+            required
           />
           </div>
           {/* password */}
@@ -86,6 +91,7 @@ function SignIn() {
             onChange={(e)=>setPassword(e.target.value)} value={password}
             type={`${showPassword ? " text" : "password"}`}
             placeholder="Password"
+            required
             className="w-full p-4 rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
           <button onClick={()=>setShowPassword(!showPassword)} className="absolute top-6.5 right-2.5 cursor-pointer">
@@ -101,6 +107,7 @@ function SignIn() {
           <button onClick={handleSignIn} className="w-full p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer">
             Sign In
           </button>
+          <p className="text-red-600">{error}</p>
           <button onClick={handleGoogleAuth} className="flex justify-center gap-2 border border-orange-500 text-orange-500 rounded-2xl py-2  font-semibold shadow-lg hover:bg-gray-100 hover:scale-105 transition transform cursor-pointer"><FcGoogle className="text-3xl" />SignIn with Google</button>
         </div>
       </div>
