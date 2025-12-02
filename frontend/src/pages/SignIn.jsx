@@ -5,7 +5,10 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { serverUrl } from "../App.jsx";
-import GoogleAuthentication from "../component/GoogleAuthentication.jsx";
+import { FcGoogle } from "react-icons/fc";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase.js";
+import { ToastContainer, toast } from 'react-toastify';
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false)
@@ -19,11 +22,24 @@ function SignIn() {
       const result = await axios.post(`${serverUrl}/api/auth/signin`,{
         email, password
       },{withCredentials:true})
-      console.log(result.data)
     } catch (error) {
       console.log(error)
     }
   }
+
+  // Google Authentication
+  const handleGoogleAuth= async () =>{
+        const provider = new GoogleAuthProvider()
+        const result = await signInWithPopup(auth, provider)
+        try {
+            const data = await axios.post(`${serverUrl}/api/auth/google-auth`,{
+                email:result.user.email,
+            },{withCredentials:true})
+             toast.success("SignIn Successfully")
+        } catch (error) {
+            toast.error("Signup Error")
+        }
+    }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100/20 to-yellow-100/30 md:p-4 sm:p-8">
@@ -85,9 +101,10 @@ function SignIn() {
           <button onClick={handleSignIn} className="w-full p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer">
             Sign In
           </button>
-          <GoogleAuthentication/>
+          <button onClick={handleGoogleAuth} className="flex justify-center gap-2 border border-orange-500 text-orange-500 rounded-2xl py-2  font-semibold shadow-lg hover:bg-gray-100 hover:scale-105 transition transform cursor-pointer"><FcGoogle className="text-3xl" />SignIn with Google</button>
         </div>
       </div>
+      <ToastContainer position="top-center" />
     </div>
   );
 }

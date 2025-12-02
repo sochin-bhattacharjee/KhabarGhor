@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Link } from 'react-router-dom';
 import logo from "../assets/logo.png";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
 import { serverUrl } from "../App.jsx";
-import GoogleAuthentication from "../component/GoogleAuthentication.jsx";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase.js";
+import { ToastContainer, toast } from 'react-toastify';
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
@@ -15,6 +18,7 @@ function SignUp() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [mobile, setMobile] = useState("")
+  const mobileRef = useRef(null)
 
   // signUp functionality
   const handleSignUp = async() =>{
@@ -22,11 +26,34 @@ function SignUp() {
       const result = await axios.post(`${serverUrl}/api/auth/signup`,{
         fullName, email, password, mobile, role
       },{withCredentials:true})
-      console.log(result)
+      toast.success("SignUp Successfully")
     } catch (error) {
-      console.log(error)
+      toast.error("Signup Error")
     }
   }
+
+  // Google Authentication
+  const handleGoogleAuth= async () =>{
+        if (!mobile || mobile.length !== 11) {
+            toast.warning("Please Enter the Correct Mobile number")
+            mobileRef.current.focus();
+            return;
+        }
+        const provider = new GoogleAuthProvider()
+        const result = await signInWithPopup(auth, provider)
+        try {
+            const data = await axios.post(`${serverUrl}/api/auth/google-auth`,{
+                fullName:result.user.displayName,
+                email:result.user.email,
+                role,
+                mobile
+            },{withCredentials:true})
+            toast.success("SignUp Successfully")
+        } catch (error) {
+            toast.error("Signup Error")
+        }
+    }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100/20 to-yellow-100/30 md:p-4 sm:p-8">
       <div className="w-full max-w-5xl bg-yellow-50 sm:rounded-xl shadow-2xl grid grid-cols-1 md:grid-cols-2 overflow-hidden">
@@ -76,6 +103,7 @@ function SignUp() {
             <label htmlFor="" className="font-medium">Number</label>
           <input
           onChange={(e)=>setMobile(e.target.value)} value={mobile}
+          ref={mobileRef}
             type="number"
             placeholder="Mobile Number"
             className="w-full p-4 rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
@@ -107,9 +135,10 @@ function SignUp() {
           <button onClick={handleSignUp} className="w-full p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer">
             Sign Up
           </button>
-          <GoogleAuthentication/>
+          <button onClick={handleGoogleAuth} className="flex justify-center gap-2 border border-orange-500 text-orange-500 rounded-2xl py-2  font-semibold shadow-lg hover:bg-gray-100 hover:scale-105 transition transform cursor-pointer"><FcGoogle className="text-3xl" />SignUp with Google</button>
         </div>
       </div>
+      <ToastContainer position="top-center" />
     </div>
   );
 }
