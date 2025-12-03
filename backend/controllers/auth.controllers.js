@@ -18,12 +18,16 @@ export const signUp = async (req,res) => {
             return res.status(400).json({message:"Please Enter the fullName"})
         }
         // email validation
+        const allowedDomains = ["@gmail.com","@yahoo.com","@outlook.com","@hotmail.com","@icloud.com","@protonmail.com","@aol.com"];
         if(!email){
             return res.status(400).json({message:"Please Enter the email"})
         }
-        if(!email.includes("@") || !email.includes("gmail.com") || !email.includes("yahoo.com") || !email.includes("outlook.com") || !email.includes("hotmail.com") || !email.includes("icloud.com") || !email.includes("protonmail.com") || !email.includes("aol.com")){
-                return res.status(400).json({message:"Please Enter the Valid email"})
-            }
+        const isValidDomain = allowedDomains.some(domain => email.endsWith(domain));
+
+        if (!isValidDomain) {
+            return res.status(400).json({ message: "Please enter a valid email" });
+        }
+        
         // mobile check
         if(!mobile){
             return res.status(400).json({message:"Please Enter the mobile number"})
@@ -47,6 +51,16 @@ export const signUp = async (req,res) => {
         // password validation
         if(password.length<6){
             return res.status(400).json({message:"Please password must be at least 6 characters"})
+        }
+
+        // Step 2: at least one lower & one upper case
+        if (!/(?=.*[a-z])(?=.*[A-Z])/.test(password)) {
+            return "Add at least one lowercase and one uppercase letter.";
+        }
+
+        // Step 3: at least one special character
+        if (!/(?=.*[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?])/.test(password)) {
+            return "Add at least one special character.";
         }
 
         // hashed password
