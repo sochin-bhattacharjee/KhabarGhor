@@ -55,12 +55,12 @@ export const signUp = async (req,res) => {
 
         // Step 2: at least one lower & one upper case
         if (!/(?=.*[a-z])(?=.*[A-Z])/.test(password)) {
-            return "Add at least one lowercase and one uppercase letter.";
+            return res.status(400).json({message:"Add at least one lowercase and one uppercase letter."})
         }
 
         // Step 3: at least one special character
         if (!/(?=.*[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?])/.test(password)) {
-            return "Add at least one special character.";
+            return res.status(400).json({message:"Add at least one special character."})
         }
 
         // hashed password
