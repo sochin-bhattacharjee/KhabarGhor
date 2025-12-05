@@ -23,7 +23,7 @@ export const signUp = async (req,res) => {
             return res.status(400).json({message:"Please Enter the email"})
         }
         const isValidDomain = allowedDomains.some(domain => email.endsWith(domain));
-
+        
         if (!isValidDomain) {
             return res.status(400).json({ message: "Please enter a valid email" });
         }
@@ -93,13 +93,16 @@ export const signIn = async (req,res) => {
         const {email, password} = req.body
         const user = await User.findOne({email})
         // email validation
+        const allowedDomains = ["@gmail.com","@yahoo.com","@outlook.com","@hotmail.com","@icloud.com","@protonmail.com","@aol.com"];
         if(!email){
             return res.status(400).json({message:"Please Enter the email"})
         }
-        if(!email.includes("@") || !email.includes("gmail.com") || !email.includes("yahoo.com") || !email.includes("outlook.com") || !email.includes("hotmail.com") || !email.includes("icloud.com") || !email.includes("protonmail.com") || !email.includes("aol.com")){
-                return res.status(400).json({message:"Please Enter the Valid email"})
-            }
-        // email validation
+        const isValidDomain = allowedDomains.some(domain => email.endsWith(domain));
+        
+        if (!isValidDomain) {
+            return res.status(400).json({ message: "Please enter a valid email" });
+        }
+        // user check
         if(!user){
             return res.status(400).json({message:"User Does not Exist."})
         }
@@ -143,8 +146,18 @@ export const sendOtp = async (req,res) =>{
     try {
         const {email} = req.body
         const user = await User.findOne({email})
-        // check user
-        if (!user) {
+        // email validation
+        const allowedDomains = ["@gmail.com","@yahoo.com","@outlook.com","@hotmail.com","@icloud.com","@protonmail.com","@aol.com"];
+        if(!email){
+            return res.status(400).json({message:"Please Enter the email"})
+        }
+        const isValidDomain = allowedDomains.some(domain => email.endsWith(domain));
+        
+        if (!isValidDomain) {
+            return res.status(400).json({ message: "Please enter a valid email" });
+        }
+        // user check
+        if(!user){
             return res.status(400).json({message:"User Does not Exist."})
         }
         // create otp
@@ -154,7 +167,7 @@ export const sendOtp = async (req,res) =>{
         user.isOtpVerified = false
         await user.save()
         await sendOtpMail(email,otp)
-        return res.status(200).json({message:"OTP send successfully"})
+        return res.status(200).json({message:"Send OTP Successfully Check Your Mail"})
     } catch (error) {
         return res.status(500).json(`send OTP error ${error}`)
     }
@@ -165,8 +178,11 @@ export const verifyOtp = async (req,res)=>{
     try {
         const {email, otp} = req.body
         const user = await User.findOne({email})
-        if(!user || user.resetOtp!=otp || user.otpExpires<Date.now()){
-            return res.status(400).json({message:"invalid/expired otp"})
+        if(!user || user.resetOtp!=otp){
+            return res.status(400).json({message:"invalid OTP"})
+        }
+        if(user.otpExpires<Date.now()){
+            return res.status(400).json({message:"expired OTP"})
         }
         user.isOtpVerified=true
         user.resetOtp=undefined

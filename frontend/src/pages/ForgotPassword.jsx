@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.png";
 import axios from 'axios';
 import { serverUrl } from '../App';
+import { ToastContainer, toast } from 'react-toastify';
+import { ThreeCircles } from 'react-loader-spinner';
 
 function ForgotPassword() {
     const [step, setStep] = useState(1)
@@ -12,28 +14,38 @@ function ForgotPassword() {
     const [otp, setOtp] = useState("")
     const [newPassword, setNewPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
     // forgot password functionality
     // step 1 -- Send OTP
     const handleSendOtp= async () =>{
+      setLoading(true)
       try {
         const result = await axios.post(`${serverUrl}/api/auth/send-otp`,{email},{withCredentials:true})
-        console.log(result)
+        setError("")
+        toast.success(`${result.data.message}`)
+        setLoading(false)
         setStep(2)
       } catch (error) {
-         console.log(error)
+        setLoading(false)
+        setError(error.response.data.message)
       }
     }
 
     // step 2 -- Verify OTP
     const handleVerifyOtp= async () =>{
+      setLoading(true)
       try {
         const result = await axios.post(`${serverUrl}/api/auth/verify-otp`,{email,otp},{withCredentials:true})
-        console.log(result)
+        setError("")
+        toast.success(`${result.data.message}`)
+        setLoading(false)
         setStep(3)
       } catch (error) {
-         console.log(error)
+        setLoading(false)
+        setError(error.response.data.message)
       }
     }
     
@@ -42,12 +54,15 @@ function ForgotPassword() {
       if(newPassword!=confirmPassword){
         return null
       }
+      setLoading(true)
       try {
         const result = await axios.post(`${serverUrl}/api/auth/reset-password`,{email,newPassword},{withCredentials:true})
-        console.log(result)
+        toast.success(`${result.data.message}`)
+        setLoading(false)
         navigate("/signIn")
       } catch (error) {
-         console.log(error)
+        setLoading(false)
+        setError(error.response.data.message)
       }
     }
 
@@ -66,7 +81,7 @@ function ForgotPassword() {
 
           {/* forgot password step 1 */}
             {step == 1 && 
-            <div>
+            <div className='space-y-3'>
             <div>
           <input
           onChange={(e)=>setEmail(e.target.value)} value={email}
@@ -75,15 +90,28 @@ function ForgotPassword() {
             className="w-full p-3 md:p-4 rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
           </div>
-          <button onClick={handleSendOtp} className='w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer mt-5'>
-            Send OTP
+          <p className="text-red-600">{error}</p>
+          <button disabled={loading} onClick={handleSendOtp} className={`w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg ${loading ? "cursor-no-drop" :"hover:scale-105 transition transform cursor-pointer"}`}>
+            {!loading ? "Send OTP" : 
+            <div className='flex justify-center'>
+              <ThreeCircles
+                visible={loading}
+                height="24"
+                width="24"
+                color="white"
+                ariaLabel="three-circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                />
+            </div>
+            }
           </button>
           </div>
             }
 
             {/* forgot password step 2 */}
             {step == 2 && 
-            <div>
+            <div className='space-y-3'>
             <div>
           <input
           onChange={(e)=>setOtp(e.target.value)} value={otp}
@@ -92,18 +120,32 @@ function ForgotPassword() {
             className="w-full p-3 md:p-4 rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
           </div>
-          <button onClick={handleVerifyOtp} className='w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer mt-5'>
-            Verify
+          <p className="text-red-600">{error}</p>
+          <button disabled={loading} onClick={handleVerifyOtp} className={`w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg ${loading ? "cursor-no-drop" :"hover:scale-105 transition transform cursor-pointer"}`}>
+            {!loading ? "Verify OTP" : 
+            <div className='flex justify-center'>
+              <ThreeCircles
+                visible={loading}
+                height="24"
+                width="24"
+                color="white"
+                ariaLabel="three-circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                />
+            </div>
+            }
           </button>
           </div>
             }
 
             {/* forgot password step 3 */}
             {step == 3 && 
-            <div>
+            <div className='space-y-3'>
             <div className='mb-3'>
               <label className='text-orange-600 font-bold' htmlFor="">New Password</label>
           <input
+          required
           onChange={(e)=>setNewPassword(e.target.value)} value={newPassword}
             type="text"
             placeholder="Enter New Password"
@@ -113,19 +155,34 @@ function ForgotPassword() {
             <div>
               <label className='text-orange-600 font-bold' htmlFor="">Confirm Password</label>
           <input
+          required
           onChange={(e)=>setConfirmPassword(e.target.value)} value={confirmPassword}
             type="text"
             placeholder="Enter Confirm Password"
             className="w-full p-3 md:p-4 rounded-xl md:rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
           </div>
-          <button onClick={handleResetPassword} className='w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer mt-5'>
-            Reset Password
+          <p className="text-red-600">{error}</p>
+          <button disabled={loading} onClick={handleResetPassword} className={`w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg ${loading ? "cursor-no-drop" :"hover:scale-105 transition transform cursor-pointer"}`}>
+            {!loading ? "Send OTP" : 
+            <div className='flex justify-center'>
+              <ThreeCircles
+                visible={loading}
+                height="24"
+                width="24"
+                color="white"
+                ariaLabel="three-circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                />
+            </div>
+            }
           </button>
           </div>
             }
           
         </div>
+        <ToastContainer position="top-center" />
     </div>
   )
 }
