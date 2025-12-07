@@ -49,7 +49,7 @@ export const signUp = async (req,res) => {
         }
 
         // password validation
-        if(password.length<6){
+        if(password.length<6 || newPassword.trim() === ""){
             return res.status(400).json({message:"Please password must be at least 6 characters"})
         }
 
@@ -142,6 +142,7 @@ export const signOut = async (req,res) => {
 }
 
 // forgot password controller
+// send OTP
 export const sendOtp = async (req,res) =>{
     try {
         const {email} = req.body
@@ -195,23 +196,51 @@ export const verifyOtp = async (req,res)=>{
 }
 
 // reset password
-export const resetPassword = async (req,res)=>{
-    try {
-        const {email, newPassword} = req.body
-        const user = await User.findOne({email})
-        // check user
-        if (!user || !user.isOtpVerified) {
-            return res.status(400).json({message:"OTP verification required."})
-        }
-        const hashedPassword = await bcrypt.hash(newPassword, 10)
-        user.password=hashedPassword
-        user.isOtpVerified=false
-        await user.save()
-        return res.status(200).json({message:"password reset successfully"})
-    } catch (error) {
-        return res.status(500).json(`Reset password error ${error}`)
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required." });
     }
-}
+    if (!newPassword) {
+      return res.status(400).json({ message: "Please enter the new password." });
+    }
+
+    // password validation
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters." });
+    }
+    // at least one lower & one upper case
+    if (!/(?=.*[a-z])(?=.*[A-Z])/.test(newPassword)) {
+      return res.status(400).json({ message: "Add at least one lowercase and one uppercase letter." });
+    }
+    // at least one special character
+    if (!/(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/.test(newPassword)) {
+      return res.status(400).json({ message: "Add at least one special character." });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // check OTP verification
+    if (!user.isOtpVerified) {
+      return res.status(400).json({ message: "OTP verification required." });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.isOtpVerified = false;
+    await user.save();
+    return res.status(200).json({ message: "Password reset successfully." });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    return res.status(500).json({ message: `Reset password error: ${error.message || error}` });
+  }
+};
+
 
 // Google Authentication
 export const googleAuth = async (req, res) => {

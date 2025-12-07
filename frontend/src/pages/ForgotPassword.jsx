@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.png";
 import axios from 'axios';
 import { serverUrl } from '../App';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { ThreeCircles } from 'react-loader-spinner';
 
 function ForgotPassword() {
@@ -40,6 +40,7 @@ function ForgotPassword() {
       try {
         const result = await axios.post(`${serverUrl}/api/auth/verify-otp`,{email,otp},{withCredentials:true})
         setError("")
+        toast.dismiss();
         toast.success(`${result.data.message}`)
         setLoading(false)
         setStep(3)
@@ -57,9 +58,12 @@ function ForgotPassword() {
       setLoading(true)
       try {
         const result = await axios.post(`${serverUrl}/api/auth/reset-password`,{email,newPassword},{withCredentials:true})
-        toast.success(`${result.data.message}`)
+        toast.dismiss();
+        toast.success("Password reset successfully")
         setLoading(false)
-        navigate("/signIn")
+        setTimeout(() => {
+              navigate("/signIn");
+        }, 1200);
       } catch (error) {
         setLoading(false)
         setError(error.response.data.message)
@@ -147,7 +151,7 @@ function ForgotPassword() {
           <input
           required
           onChange={(e)=>setNewPassword(e.target.value)} value={newPassword}
-            type="text"
+            type="password"
             placeholder="Enter New Password"
             className="w-full p-3 md:p-4 rounded-xl md:rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
@@ -157,14 +161,14 @@ function ForgotPassword() {
           <input
           required
           onChange={(e)=>setConfirmPassword(e.target.value)} value={confirmPassword}
-            type="text"
+            type="password"
             placeholder="Enter Confirm Password"
             className="w-full p-3 md:p-4 rounded-xl md:rounded-2xl bg-white text-gray-800 outline-none shadow-md placeholder-gray-400 focus:ring-2 focus:ring-orange-300 mt-1"
           />
           </div>
           <p className="text-red-600">{error}</p>
           <button disabled={loading} onClick={handleResetPassword} className={`w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg ${loading ? "cursor-no-drop" :"hover:scale-105 transition transform cursor-pointer"}`}>
-            {!loading ? "Send OTP" : 
+            {!loading ? "Reset Password" : 
             <div className='flex justify-center'>
               <ThreeCircles
                 visible={loading}
@@ -182,7 +186,6 @@ function ForgotPassword() {
             }
           
         </div>
-        <ToastContainer position="top-center" />
     </div>
   )
 }
