@@ -9,6 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase.js";
 import { ToastContainer, toast } from 'react-toastify';
+import { ThreeCircles } from "react-loader-spinner";
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false)
@@ -16,16 +17,20 @@ function SignIn() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
 
   // signIn functionality
   const handleSignIn = async() =>{
+    setLoading(true)
     try {
       const result = await axios.post(`${serverUrl}/api/auth/signin`,{
         email, password
       },{withCredentials:true})
       setError("")
       toast.success("SignIn Successfully")
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       setError(error.response.data.message)
     }
   }
@@ -104,8 +109,21 @@ function SignIn() {
             <div></div>
             <p className="text-orange-600 text-right font-medium hover:underline hover:text-blue-700 cursor-pointer" onClick={() => navigate("/forgot-password")}>forgot password</p>
           </div>
-          <button onClick={handleSignIn} className="w-full p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer">
-            Sign In
+          
+          <button disabled={loading} onClick={handleSignIn} className={`w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg ${loading ? "cursor-no-drop" :"hover:scale-105 transition transform cursor-pointer"}`}>
+            {!loading ? "SignIn" : 
+            <div className='flex justify-center'>
+              <ThreeCircles
+                visible={loading}
+                height="24"
+                width="24"
+                color="white"
+                ariaLabel="three-circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                />
+            </div>
+            }
           </button>
           <p className="text-red-600">{error}</p>
           <button onClick={handleGoogleAuth} className="flex justify-center gap-2 border border-orange-500 text-orange-500 rounded-2xl py-2  font-semibold shadow-lg hover:bg-gray-100 hover:scale-105 transition transform cursor-pointer"><FcGoogle className="text-3xl" />SignIn with Google</button>

@@ -9,6 +9,7 @@ import { serverUrl } from "../App.jsx";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase.js";
 import { ToastContainer, toast } from 'react-toastify';
+import { ThreeCircles } from "react-loader-spinner";
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
@@ -19,17 +20,21 @@ function SignUp() {
   const [password, setPassword] = useState("")
   const [mobile, setMobile] = useState("")
   const [error,setError] = useState("")
+  const [loading, setLoading] = useState(false)
   const mobileRef = useRef(null)
 
   // signUp functionality
   const handleSignUp = async() =>{
+    setLoading(true)
     try {
       const result = await axios.post(`${serverUrl}/api/auth/signup`,{
         fullName, email, password, mobile, role
       },{withCredentials:true})
       toast.success("SignUp Successfully")
+      setLoading(false)
       setError("")
     } catch (error) {
+      setLoading(false)
       setError(error.response.data.message)
     }
   }
@@ -139,8 +144,20 @@ function SignUp() {
           ))}
           </div>
           </div>
-          <button onClick={handleSignUp} className="w-full p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition transform cursor-pointer">
-            Sign Up
+          <button disabled={loading} onClick={handleSignUp} className={`w-full p-3 md:p-4 bg-gradient-to-r from-red-400 to-orange-500 text-white rounded-2xl font-semibold shadow-lg ${loading ? "cursor-no-drop" :"hover:scale-105 transition transform cursor-pointer"}`}>
+            {!loading ? "SignUp" : 
+            <div className='flex justify-center'>
+              <ThreeCircles
+                visible={loading}
+                height="24"
+                width="24"
+                color="white"
+                ariaLabel="three-circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                />
+            </div>
+            }
           </button>
           <p className="text-red-600">{error}</p>
           <button onClick={handleGoogleAuth} className="flex justify-center gap-2 border border-orange-500 text-orange-500 rounded-2xl py-2  font-semibold shadow-lg hover:bg-gray-100 hover:scale-105 transition transform cursor-pointer"><FcGoogle className="text-3xl" />SignUp with Google</button>
