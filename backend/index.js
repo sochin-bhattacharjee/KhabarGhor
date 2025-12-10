@@ -4,6 +4,7 @@ dotenv.config()
 import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.routes.js";
+import userRouter from "./routes/user.routes.js";
 import cors from "cors"
 const app = express()
 const port = process.env.PORT;
@@ -14,6 +15,7 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api/auth", authRouter)
+app.use("/api/user", userRouter)
 
 app.get("/",(req, res)=>{
     res.send("khaber Ghor backend is running...")
