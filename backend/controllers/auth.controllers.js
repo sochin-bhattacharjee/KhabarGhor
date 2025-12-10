@@ -49,7 +49,7 @@ export const signUp = async (req,res) => {
         }
 
         // password validation
-        if(password.length<6 || newPassword.trim() === ""){
+        if(password.length<6){
             return res.status(400).json({message:"Please password must be at least 6 characters"})
         }
 
