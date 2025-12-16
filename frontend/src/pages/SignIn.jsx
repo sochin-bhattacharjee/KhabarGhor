@@ -8,8 +8,10 @@ import { serverUrl } from "../App.jsx";
 import { FcGoogle } from "react-icons/fc";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase.js";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { ThreeCircles } from "react-loader-spinner";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/slice/userSlice/userSlice.js";
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false)
@@ -19,6 +21,9 @@ function SignIn() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
 
+  // Redux dispatch function
+  const dispatch=useDispatch()
+
   // signIn functionality
   const handleSignIn = async() =>{
     setLoading(true)
@@ -26,6 +31,7 @@ function SignIn() {
       const result = await axios.post(`${serverUrl}/api/auth/signin`,{
         email, password
       },{withCredentials:true})
+      dispatch(setUserData(result.data))
       setError("")
       toast.success("SignIn Successfully")
       setLoading(false)
@@ -40,9 +46,10 @@ function SignIn() {
         const provider = new GoogleAuthProvider()
         const result = await signInWithPopup(auth, provider)
         try {
-            const data = await axios.post(`${serverUrl}/api/auth/google-auth`,{
+            const {data} = await axios.post(`${serverUrl}/api/auth/google-auth`,{
                 email:result.user.email,
             },{withCredentials:true})
+            dispatch(setUserData(data))
             setError("")
             toast.success("SignIn Successfully")
         } catch (error) {
@@ -129,7 +136,6 @@ function SignIn() {
           <button onClick={handleGoogleAuth} className="flex justify-center gap-2 border border-orange-500 text-orange-500 rounded-2xl py-2  font-semibold shadow-lg hover:bg-gray-100 hover:scale-105 transition transform cursor-pointer"><FcGoogle className="text-3xl" />SignIn with Google</button>
         </div>
       </div>
-      <ToastContainer position="top-center" />
     </div>
   );
 }

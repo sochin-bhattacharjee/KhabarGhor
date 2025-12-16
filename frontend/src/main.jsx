@@ -8,8 +8,8 @@ import { Provider } from "react-redux";
 import { store } from './redux/store/store.js';
 
 createRoot(document.getElementById("root")).render(
-  <BrowserRouter store={store}>
-    <Provider>
+  <BrowserRouter>
+    <Provider store={store}>
       <App />
     </Provider>
     <ToastContainer position="top-center" />

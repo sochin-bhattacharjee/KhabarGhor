@@ -8,8 +8,10 @@ import axios from "axios";
 import { serverUrl } from "../App.jsx";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase.js";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { ThreeCircles } from "react-loader-spinner";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/slice/userSlice/userSlice.js";
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
@@ -23,6 +25,9 @@ function SignUp() {
   const [loading, setLoading] = useState(false)
   const mobileRef = useRef(null)
 
+  // Redux dispatch function
+  const dispatch=useDispatch()
+
   // signUp functionality
   const handleSignUp = async() =>{
     setLoading(true)
@@ -30,6 +35,7 @@ function SignUp() {
       const result = await axios.post(`${serverUrl}/api/auth/signup`,{
         fullName, email, password, mobile, role
       },{withCredentials:true})
+      dispatch(setUserData(result.data))
       toast.success("SignUp Successfully")
       setLoading(false)
       setError("")
@@ -50,12 +56,13 @@ function SignUp() {
         const provider = new GoogleAuthProvider()
         const result = await signInWithPopup(auth, provider)
         try {
-            const data = await axios.post(`${serverUrl}/api/auth/google-auth`,{
+            const {data} = await axios.post(`${serverUrl}/api/auth/google-auth`,{
                 fullName:result.user.displayName,
                 email:result.user.email,
                 role,
                 mobile
             },{withCredentials:true})
+            dispatch(setUserData(data))
             toast.success("SignUp Successfully")
         } catch (error) {
             setError(error.response.data.message)
@@ -163,7 +170,6 @@ function SignUp() {
           <button onClick={handleGoogleAuth} className="flex justify-center gap-2 border border-orange-500 text-orange-500 rounded-2xl py-2  font-semibold shadow-lg hover:bg-gray-100 hover:scale-105 transition transform cursor-pointer"><FcGoogle className="text-3xl" />SignUp with Google</button>
         </div>
       </div>
-      <ToastContainer position="top-center" />
     </div>
   );
 }
