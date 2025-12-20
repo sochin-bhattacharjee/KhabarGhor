@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import axios from 'axios';
 import { serverUrl } from '../App';
 import { useDispatch } from 'react-redux';
-import { setUserData } from '../redux/slice/userSlice/userSlice';
+import { clearUserData, setUserData } from '../redux/slice/userSlice/userSlice';
 
 function useGetCurrentUser() {
     // Redux dispatch function
@@ -18,7 +18,7 @@ function useGetCurrentUser() {
                 dispatch(setUserData(result.data))
             }
             catch (error) {
-                console.log(error)
+                dispatch(clearUserData())
             }
         }
         fetchUser()
