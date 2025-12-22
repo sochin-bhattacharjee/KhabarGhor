@@ -6,9 +6,12 @@ import ForgotPassword from './pages/ForgotPassword'
 import useGetCurrentUser from './hooks/useGetCurrentUser'
 import { useSelector } from 'react-redux'
 import { ThreeCircles } from 'react-loader-spinner'
+import useGetCity from './hooks/useGetCity'
 export const serverUrl = import.meta.env.VITE_SERVER_URL
 function App() {
+  
   useGetCurrentUser()
+  useGetCity()
 
   const {userData, loading} = useSelector(state=>state.user)
   // loader

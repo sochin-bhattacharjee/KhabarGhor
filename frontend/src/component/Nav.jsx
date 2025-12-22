@@ -4,36 +4,64 @@ import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 import { IoCartOutline } from "react-icons/io5";
 import { RxCrossCircled } from "react-icons/rx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { serverUrl } from "../App";
+import { toast } from "react-toastify";
+import { setUserData } from "../redux/slice/userSlice/userSlice";
 
 function Nav() {
-  // login user
-  const { userData } = useSelector((state) => state.user);
-  const [showSearch, setShowSearch] = useState(false)
+  const { userData, city } = useSelector((state) => state.user);
+  const [showSearch, setShowSearch] = useState(false);
+  const [showCityPopup, setShowCityPopup] = useState(false);
+  const dispatch = useDispatch();
+
+  // logout
+  const handleLogOut = async () => {
+    try {
+      await axios.get(`${serverUrl}/api/auth/signout`, {
+        withCredentials: true,
+      });
+      toast.success("Log out Successfully");
+      dispatch(setUserData(null));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    // Navbar main div
     <div className="w-full h-[65px] md:h-[80px] flex items-center justify-between md:justify-center gap-[20px] fixed top-0 z-[100] bg-[#fff9f6] overflow-visible">
+      {/* Small device search */}
+      {showSearch && (
+        <div className="w-[95%] h-[40px] bg-white shadow-xl rounded-lg flex gap-5 fixed top-[65px] left-[2%] lg:hidden">
+          {/* city */}
+          <div
+            onClick={() => setShowCityPopup((prev) => !prev)}
+            className="flex gap-3 w-[30%] overflow-hidden justify-center items-center px-3 border-r-2 border-gray-600 cursor-pointer"
+          >
+            <FaLocationDot size={20} className="text-[#ff4d2d]" />
+            <div className="w-[80%] truncate text-gray-600">{city}</div>
+          </div>
 
-        {/* small device search  */}
+          {/* search */}
+          <div className="w-[70%] flex items-center gap-3">
+            <IoSearch size={25} className="text-[#ff4d2d]" />
+            <input
+              type="text"
+              className="px-[10px] text-gray-700 outline-0 w-full"
+              placeholder="search delicious food..."
+            />
+          </div>
 
-        {showSearch && <div className="w-[90%] h-[40px] bg-white shadow-xl rounded-lg items-center flex gap-5 fixed top-[65px] left-[5%] lg:hidden">
-        {/* city name div */}
-        <div className="flex gap-3 w-[30%] overflow-hidden justify-center items-center px-3 border-r-2 border-gray-600">
-          <FaLocationDot size={20} className="text-[#ff4d2d]" />
-          <div className="w-[80%] truncate text-gray-600">Rangamati</div>
+          {showCityPopup && (
+            <div className="absolute bottom-8 left-5 bg-white p-2 shadow-2xl rounded-md">
+              {city}
+            </div>
+          )}
         </div>
-        {/* search div */}
-        <div className="w-[70%] flex items-center gap-3">
-          <IoSearch size={25} className="text-[#ff4d2d]" />
-          <input
-            type="text"
-            className="px-[10px] text-gray-700 outline-0 w-full"
-            placeholder="search delicious food..."
-          />
-        </div>
-      </div>}
+      )}
 
-      {/* Site name and logo div*/}
+      {/* Logo and name */}
       <div className="flex items-center">
         <img src={logo} alt="Logo" className="w-9 h-9 object-contain" />
         <h1 className="text-lg md:text-2xl font-extrabold">
@@ -44,14 +72,16 @@ function Nav() {
         </h1>
       </div>
 
-      {/* Search city and food div */}
-      <div className="w-[60%] lg:w-[40%] h-[40px] bg-white shadow-xl rounded-lg items-center hidden lg:flex gap-5">
-        {/* city name div */}
-        <div className="flex gap-3 w-[30%] overflow-hidden justify-center items-center px-3 border-r-2 border-gray-600">
+      {/* Desktop search */}
+      <div className="w-[60%] lg:w-[40%] h-[40px] bg-white shadow-xl rounded-lg items-center hidden lg:flex gap-5 relative">
+        <div
+          onClick={() => setShowCityPopup((prev) => !prev)}
+          className="flex gap-3 w-[30%] overflow-hidden justify-center items-center px-3 border-r-2 border-gray-600 cursor-pointer"
+        >
           <FaLocationDot size={20} className="text-[#ff4d2d]" />
-          <div className="w-[80%] truncate text-gray-600">Rangamati</div>
+          <div className="w-[80%] truncate text-gray-600">{city}</div>
         </div>
-        {/* search div */}
+
         <div className="w-[70%] flex items-center gap-3">
           <IoSearch size={25} className="text-[#ff4d2d]" />
           <input
@@ -60,17 +90,32 @@ function Nav() {
             placeholder="search delicious food..."
           />
         </div>
+
+        {showCityPopup && (
+          <div className="absolute top-12 left-3 bg-white p-3 shadow-2xl rounded-md">
+            {city}
+          </div>
+        )}
       </div>
 
-      <div className="flex items-center justify-center gap-4 pr-1">
-        
-        {/* small device Search button */}
-        {showSearch ?
-        <RxCrossCircled size={25} className="text-[#ff4d2d] lg:hidden" onClick={()=>setShowSearch(false)}/> :
-        <IoSearch size={25} className="text-[#ff4d2d] lg:hidden" onClick={()=>setShowSearch(true)}/>
-        }
+      {/* Right side */}
+      <div className="flex items-center gap-4 pr-1">
+        {/* mobile search toggle */}
+        {showSearch ? (
+          <RxCrossCircled
+            size={25}
+            className="text-[#ff4d2d] lg:hidden cursor-pointer"
+            onClick={() => setShowSearch(false)}
+          />
+        ) : (
+          <IoSearch
+            size={25}
+            className="text-[#ff4d2d] lg:hidden cursor-pointer"
+            onClick={() => setShowSearch(true)}
+          />
+        )}
 
-        {/* cart div */}
+        {/* cart div*/}
         <div className="relative cursor-pointer">
           <IoCartOutline size={22} className="text-[#ff4d2d]" />
           <span className="absolute right-[-9px] top-[-12px] text-[#ff4d2d]">
@@ -78,32 +123,35 @@ function Nav() {
           </span>
         </div>
 
-        {/* My order button */}
-        <button className="btn hidden md:block px-3 py-1 rounded-4xl bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium border-2 border-white hover:border-2 hover:border-[#ff4d2d] cursor-pointer hover:text-[#ee2c0a]">
+        {/* My order div*/}
+        <button className="hidden md:block px-3 py-1 rounded-4xl bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium border-2 border-white hover:border-[#ff4d2d]">
           My Order
         </button>
 
-        {/* profile div */}
-        <div className="dropdown dropdown-bottom dropdown-end">
+        {/* Profile Dropdown*/}
+        <div className="dropdown dropdown-end">
           <div
             tabIndex={0}
             role="button"
-            className="btn border-none w-[30px] md:w-[35px] h-[30px] md:h-[35px] rounded-full flex justify-center items-center bg-[#ee2c0a] text-white text-lg shadow-xl font-semibold "
+            className="btn border-none w-[30px] md:w-[35px] h-[30px] md:h-[35px] rounded-full flex justify-center items-center bg-[#ee2c0a] text-white text-lg shadow-xl font-semibold"
           >
-            {userData?.fullName.toUpperCase().slice(0, 1)}
+            {userData?.fullName?.toUpperCase().slice(0, 1)}
           </div>
+
           <ul
-            tabIndex="-1"
-            className="dropdown-content menu bg-base-100 rounded-box z-1 w-40 p-2 shadow-sm"
+            tabIndex={0}
+            className="dropdown-content menu rounded-box z-[999] w-40 shadow bg-white mt-2"
           >
-            <li>
-              <a className="font-semibold">{userData?.fullName}</a>
+            <li className="font-semibold pointer-events-none px-3">
+              {userData?.fullName}
             </li>
-            <li>
-              <a className="md:hidden text-[#ff4d2d] font-semibold">My Order</a>
+
+            <li className="md:hidden text-[#ff4d2d] font-semibold">
+              <a>My Order</a>
             </li>
-            <li>
-              <a className="text-[#ff4d2d] font-semibold">log Out</a>
+
+            <li onClick={handleLogOut} className="text-[#ff4d2d] font-semibold">
+              <a>Log Out</a>
             </li>
           </ul>
         </div>
