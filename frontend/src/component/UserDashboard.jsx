@@ -1,8 +1,11 @@
 import React from 'react'
+import Nav from './Nav'
 
 function UserDashboard() {
   return (
-    <div>UserDashboard</div>
+    <div>
+      <Nav/>
+    </div>
   )
 }
 
