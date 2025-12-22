@@ -16,7 +16,7 @@ function Nav() {
 
         {/* small device search  */}
 
-        {showSearch && <div className="w-[90%] h-[40px] bg-white shadow-xl rounded-lg items-center flex gap-5 fixed top-[65px] left-[5%] md:hidden">
+        {showSearch && <div className="w-[90%] h-[40px] bg-white shadow-xl rounded-lg items-center flex gap-5 fixed top-[65px] left-[5%] lg:hidden">
         {/* city name div */}
         <div className="flex gap-3 w-[30%] overflow-hidden justify-center items-center px-3 border-r-2 border-gray-600">
           <FaLocationDot size={20} className="text-[#ff4d2d]" />
@@ -45,7 +45,7 @@ function Nav() {
       </div>
 
       {/* Search city and food div */}
-      <div className="md:w-[60%] lg:w-[40%] h-[40px] bg-white shadow-xl rounded-lg items-center hidden md:flex gap-5">
+      <div className="w-[60%] lg:w-[40%] h-[40px] bg-white shadow-xl rounded-lg items-center hidden lg:flex gap-5">
         {/* city name div */}
         <div className="flex gap-3 w-[30%] overflow-hidden justify-center items-center px-3 border-r-2 border-gray-600">
           <FaLocationDot size={20} className="text-[#ff4d2d]" />
@@ -66,8 +66,8 @@ function Nav() {
         
         {/* small device Search button */}
         {showSearch ?
-        <RxCrossCircled size={25} className="text-[#ff4d2d] md:hidden" onClick={()=>setShowSearch(false)}/> :
-        <IoSearch size={25} className="text-[#ff4d2d] md:hidden" onClick={()=>setShowSearch(true)}/>
+        <RxCrossCircled size={25} className="text-[#ff4d2d] lg:hidden" onClick={()=>setShowSearch(false)}/> :
+        <IoSearch size={25} className="text-[#ff4d2d] lg:hidden" onClick={()=>setShowSearch(true)}/>
         }
 
         {/* cart div */}
