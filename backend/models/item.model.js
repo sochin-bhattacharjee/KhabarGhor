@@ -13,16 +13,28 @@ const itemSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Shop"
     },
-    category:{
-        type:String,
-        enum:[
+    category: {
+        type: String,
+        enum: [
             "Snacks",
-            "Desserts",
+            "Starters",
+            "Main Course",
+            "Rice & Biryani",
             "Pizza",
             "Burger",
             "Sandwiches",
+            "Rolls & Wraps",
+            "Fried Chicken",
+            "Noodles & Pasta",
+            "Chinese",
+            "South Indian",
+            "Desserts",
+            "Beverages",
+            "Ice Cream",
+            "Bakery",
+            "Street Food"
         ],
-        required:true
+        required: true
     },
     price:{
         type:Number,
