@@ -18,10 +18,10 @@ app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
 
 app.get("/",(req, res)=>{
-    res.send("khaber Ghor backend is running...")
+    res.send("khabar Ghor backend is running...")
 })
 
 app.listen(port, ()=>{
     connectDB()
-    console.log(`Khaber Ghor server is running at ${port}`)
+    console.log(`Khabar Ghor server is running at ${port}`)
 })
