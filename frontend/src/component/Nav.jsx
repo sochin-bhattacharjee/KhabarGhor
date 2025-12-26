@@ -14,6 +14,7 @@ import { setUserData } from "../redux/slice/userSlice/userSlice";
 
 function Nav() {
   const { userData, city } = useSelector((state) => state.user);
+  const { myShopData } = useSelector((state) => state.owner);
   const [showSearch, setShowSearch] = useState(false);
   const [showCityPopup, setShowCityPopup] = useState(false);
   const dispatch = useDispatch();
@@ -123,23 +124,31 @@ function Nav() {
         {/* add food item */}
         {userData.role == "owner" ? (
           <>
-            <button className="px-2 md:px-3 py-2 rounded-4xl bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium md:border-2 border-white hover:border-[#ff4d2d] cursor-pointer hidden md:flex md:gap-1">
-              <FaPlus size={20} className="text-[#ff4d2d]" />
-              <span>Add Food Item</span>
-            </button>
-            <button className="px-2 py-2 rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer md:hidden flex items-center justify-center">
-              <FaPlus size={18} className="text-[#ff4d2d]" />
-            </button>
+            {myShopData && (
+              <>
+                <button className="px-2 md:px-3 py-2 rounded-4xl bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium md:border-2 border-white hover:border-[#ff4d2d] cursor-pointer hidden md:flex md:gap-1">
+                  <FaPlus size={20} className="text-[#ff4d2d]" />
+                  <span>Add Food Item</span>
+                </button>
+                <button className="px-2 py-2 rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer md:hidden flex items-center justify-center">
+                  <FaPlus size={18} className="text-[#ff4d2d]" />
+                </button>
+              </>
+            )}
 
             {/* owner my order div */}
             <div className="relative md:px-3 py-2 rounded-4xl bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium md:border-2 border-white hover:border-[#ff4d2d] cursor-pointer hidden md:flex items-center md:gap-1">
               <TbReceiptDollar size={23} className="text-[#ff4d2d]" />
               <span className="text-[#ff4d2d]">My Orders</span>
-              <span className="absolute -right-1 -top-1 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]">0</span>
+              <span className="absolute -right-1 -top-1 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]">
+                0
+              </span>
             </div>
             <div className="relative px-2 py-2 rounded-4xl bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer flex md:hidden">
               <TbReceiptDollar size={23} className="text-[#ff4d2d]" />
-              <span className="absolute -right-1 -top-1 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[5px] py-[1px]">0</span>
+              <span className="absolute -right-1 -top-1 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[5px] py-[1px]">
+                0
+              </span>
             </div>
           </>
         ) : (

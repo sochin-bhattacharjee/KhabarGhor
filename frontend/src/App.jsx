@@ -4,14 +4,16 @@ import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
 import ForgotPassword from './pages/ForgotPassword'
 import useGetCurrentUser from './hooks/useGetCurrentUser'
+import useGetCity from './hooks/useGetCity'
+import useGetMyShop from './hooks/useGetMyShop'
 import { useSelector } from 'react-redux'
 import { ThreeCircles } from 'react-loader-spinner'
-import useGetCity from './hooks/useGetCity'
 export const serverUrl = import.meta.env.VITE_SERVER_URL
 function App() {
   
   useGetCurrentUser()
   useGetCity()
+  useGetMyShop()
 
   const {userData, loading} = useSelector(state=>state.user)
   // loader
