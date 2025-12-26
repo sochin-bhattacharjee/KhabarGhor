@@ -24,3 +24,16 @@ export const createAndEditShop = async (req, res) => {
         return res.status(500).json({message:`create shop error ${error}`})
     }
 }
+
+// Get the current logged-in user's shop with owner and items details
+export const getMyShop = async (req, res) => {
+    try {
+        const shop = await Shop.findOne({owner:req.userId}).populate("owner items")
+        if (!shop) {
+            return null
+        }
+        return res.status(201).json(shop)
+    } catch (error) {
+        return res.status(500).json({message:`get my shop error ${error}`})
+    }
+}
