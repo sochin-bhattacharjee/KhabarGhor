@@ -3,7 +3,7 @@ import Nav from './Nav'
 
 function UserDashboard() {
   return (
-    <div>
+    <div className='bg-gradient-to-br to-orange-50 from-white'>
       <Nav/>
     </div>
   )

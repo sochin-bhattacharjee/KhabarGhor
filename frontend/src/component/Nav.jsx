@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { setUserData } from "../redux/slice/userSlice/userSlice";
 
 function Nav() {
-  const { userData, city } = useSelector((state) => state.user);
+  const { userData, currentCity } = useSelector((state) => state.user);
   const { myShopData } = useSelector((state) => state.owner);
   const [showSearch, setShowSearch] = useState(false);
   const [showCityPopup, setShowCityPopup] = useState(false);
@@ -43,7 +43,7 @@ function Nav() {
             className="flex gap-3 w-[30%] overflow-hidden justify-center items-center px-3 border-r-2 border-gray-600 cursor-pointer"
           >
             <FaLocationDot size={20} className="text-[#ff4d2d]" />
-            <div className="w-[80%] truncate text-gray-600">{city}</div>
+            <div className="w-[80%] truncate text-gray-600">{currentCity}</div>
           </div>
 
           {/* search */}
@@ -58,7 +58,7 @@ function Nav() {
 
           {showCityPopup && (
             <div className="absolute bottom-8 left-5 bg-white p-2 shadow-2xl rounded-md">
-              {city}
+              {currentCity}
             </div>
           )}
         </div>
@@ -83,7 +83,7 @@ function Nav() {
             className="flex gap-3 w-[30%] overflow-hidden justify-center items-center px-3 border-r-2 border-gray-600 cursor-pointer"
           >
             <FaLocationDot size={20} className="text-[#ff4d2d]" />
-            <div className="w-[80%] truncate text-gray-600">{city}</div>
+            <div className="w-[80%] truncate text-gray-600">{currentCity}</div>
           </div>
 
           <div className="w-[70%] flex items-center gap-3">
@@ -97,7 +97,7 @@ function Nav() {
 
           {showCityPopup && (
             <div className="absolute top-12 left-3 bg-white p-3 shadow-2xl rounded-md">
-              {city}
+              {currentCity}
             </div>
           )}
         </div>

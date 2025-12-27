@@ -8,7 +8,7 @@ function OwnerDashboard() {
   const { myShopData } = useSelector((state) => state.owner);
   const navigate = useNavigate()
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br to-orange-50 from-white">
       {/* Navbar */}
       <Nav></Nav>
 
