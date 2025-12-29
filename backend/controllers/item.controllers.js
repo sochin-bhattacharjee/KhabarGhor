@@ -92,7 +92,7 @@ export const getItemById = async (req, res) => {
 // delete item
 export const deleteItem = async (req, res) => {
   try {
-    const itemId = req.params.itemId; // ✅ ঠিক করা হলো
+    const itemId = req.params.itemId;
 
     const item = await Item.findByIdAndDelete(itemId);
     if (!item) {
@@ -119,4 +119,36 @@ export const deleteItem = async (req, res) => {
     });
   }
 };
+
+// get item by city 
+export const getItemByCity = async (req, res) => {
+  try {
+    const { city } = req.params;
+
+    if (!city) {
+      return res.status(400).json({ message: "city is required" });
+    }
+
+    const shops = await Shop.find({
+      city: { $regex: new RegExp(`^${city}$`, "i") }
+    });
+
+    if (!shops || shops.length === 0) {
+      return res.status(404).json({ message: "Shops not found" });
+    }
+
+    const shopIds = shops.map((shop) => shop._id);
+
+    const items = await Item.find({
+      shop: { $in: shopIds }
+    }).populate("shop");
+
+    return res.status(200).json(items);
+  } catch (error) {
+    return res.status(500).json({
+      message: `get item by city error ${error.message}`,
+    });
+  }
+};
+
 

@@ -12,6 +12,7 @@ import CreateEditShop from './pages/CreateEditShop'
 import AddItem from './pages/AddItem'
 import EditItem from './pages/EditItem'
 import useGetShopByCity from './hooks/useGetShopByCity'
+import useGetItemsByCity from './hooks/useGetItemsByCity'
 export const serverUrl = import.meta.env.VITE_SERVER_URL
 function App() {
   
@@ -19,6 +20,7 @@ function App() {
   useGetCity()
   useGetMyShop()
   useGetShopByCity()
+  useGetItemsByCity()
 
   const {userData, loading} = useSelector(state=>state.user)
   // loader

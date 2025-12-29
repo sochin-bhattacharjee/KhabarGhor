@@ -9,20 +9,26 @@ function useGetMyShop() {
     const dispatch=useDispatch()
 
     // Fetch current authenticated user data on component mount
-    useEffect(()=>{
-        const fetchShop = async () => {
-            try {
-                const result = await axios.get(`${serverUrl}/api/shop/get-my`,
-                    {withCredentials:true}
-                )
-                dispatch(setMyShopData(result.data))
-            }
-            catch (error) {
-                console.log(error)
-            }
-        }
-        fetchShop()
-    },[])
+    useEffect(() => {
+  const fetchShop = async () => {
+    try {
+      const result = await axios.get(
+        `${serverUrl}/api/shop/get-my`,
+        { withCredentials: true }
+      );
+      dispatch(setMyShopData(result.data));
+    } catch (error) {
+      if (error.response?.status === 404) {
+        dispatch(setMyShopData(null));
+      } else {
+        console.log(error);
+      }
+    }
+  };
+
+  fetchShop();
+}, []);
+
 }
 
 export default useGetMyShop;

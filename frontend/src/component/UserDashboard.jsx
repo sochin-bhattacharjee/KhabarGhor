@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import ShopMyCityCard from "./ShopMyCityCard";
 
 function UserDashboard() {
-  const {currentCity,shopInMyCity} = useSelector(state=>state.user)
+  const { currentCity, shopInMyCity } = useSelector((state) => state.user);
   return (
     <div className="bg-gradient-to-br to-orange-50 from-white min-h-screen">
       <Nav />
@@ -19,17 +19,16 @@ function UserDashboard() {
 
         {/* Carousel */}
         <div className="overflow-hidden">
-  <div className="flex gap-4 w-max animate-seamless-left hover:[animation-play-state:paused]">
-    {[...categories, ...categories].map((cate, index) => (
-      <CategoryCard
-        key={index}
-        name={cate.category}
-        image={cate.image}
-      />
-    ))}
-  </div>
-</div>
-
+          <div className="flex gap-4 w-max animate-seamless-left hover:[animation-play-state:paused]">
+            {[...categories, ...categories].map((cate, index) => (
+              <CategoryCard
+                key={index}
+                name={cate.category}
+                image={cate.image}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Best Shop city div */}
@@ -40,17 +39,19 @@ function UserDashboard() {
 
         {/* Carousel */}
         <div className="overflow-hidden">
-  <div className="flex gap-4 w-max animate-seamless-right hover:[animation-play-state:paused]">
-    {shopInMyCity.map((shop, index) => (
-      <ShopMyCityCard
-        key={index}
-        name={shop.name}
-        image={shop.image}
-      />
-    ))}
-  </div>
-</div>
+          <div className="flex gap-4 w-max animate-seamless-right hover:[animation-play-state:paused]">
+            {shopInMyCity.map((shop, index) => (
+              <ShopMyCityCard key={index} name={shop.name} image={shop.image} />
+            ))}
+          </div>
+        </div>
+      </div>
 
+      {/* all item */}
+      <div className="w-full max-w-6xl flex flex-col gap-5 items-center mt-5 sm:mt-20 md:mt-11 lg:mt-16 px-3">
+        <h1 className="text-xl text-center md:text-3xl font-bold text-gray-800 mb-3 md:mb-4 md:mb-6">
+          Suggested Food Item
+        </h1>
       </div>
     </div>
   );
