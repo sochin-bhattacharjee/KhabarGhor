@@ -1,12 +1,29 @@
-import React from 'react'
-import Nav from './Nav'
+import React from "react";
+import Nav from "./Nav";
+import { categories } from "../category";
+import CategoryCard from "./CategoryCard";
 
 function UserDashboard() {
   return (
-    <div className='bg-gradient-to-br to-orange-50 from-white'>
-      <Nav/>
+    <div className="bg-gradient-to-br to-orange-50 from-white min-h-screen">
+      <Nav />
+
+      <div className="w-full max-w-6xl mx-auto mt-16 sm:mt-20 md:mt-24 lg:mt-28 px-3">
+        <h1 className="text-xl text-center md:text-3xl font-bold text-gray-800 mb-3 md:mb-4 md:mb-6">
+          Inspiration for your first order
+        </h1>
+
+        {/* Carousel */}
+        <div className="overflow-hidden">
+          <div className="flex gap-4 w-max animate-seamless hover:[animation-play-state:paused]">
+            {[...categories, ...categories].map((cate, index) => (
+              <CategoryCard key={index} data={cate} />
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default UserDashboard
+export default UserDashboard;
