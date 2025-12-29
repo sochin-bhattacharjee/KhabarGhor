@@ -11,6 +11,7 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { toast } from "react-toastify";
 import { setUserData } from "../redux/slice/userSlice/userSlice";
+import { useNavigate } from "react-router-dom";
 
 function Nav() {
   const { userData, currentCity } = useSelector((state) => state.user);
@@ -18,6 +19,7 @@ function Nav() {
   const [showSearch, setShowSearch] = useState(false);
   const [showCityPopup, setShowCityPopup] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   // logout
   const handleLogOut = async () => {
@@ -126,11 +128,11 @@ function Nav() {
           <>
             {myShopData && (
               <>
-                <button className="px-2 md:px-3 py-2 rounded-4xl bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium md:border-2 border-white hover:border-[#ff4d2d] cursor-pointer hidden md:flex md:gap-1">
+                <button onClick={()=>navigate("/add-item")} className="px-2 md:px-3 py-2 rounded-4xl bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium md:border-2 border-white hover:border-[#ff4d2d] cursor-pointer hidden md:flex md:gap-1">
                   <FaPlus size={20} className="text-[#ff4d2d]" />
                   <span>Add Food Item</span>
                 </button>
-                <button className="px-2 py-2 rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer md:hidden flex items-center justify-center">
+                <button onClick={()=>navigate("/add-item")} className="px-2 py-2 rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d] cursor-pointer md:hidden flex items-center justify-center">
                   <FaPlus size={18} className="text-[#ff4d2d]" />
                 </button>
               </>
@@ -185,9 +187,9 @@ function Nav() {
               {userData?.fullName}
             </li>
 
-            <li className="md:hidden text-[#ff4d2d] font-semibold">
+            {userData.role=="user" && <li className="md:hidden text-[#ff4d2d] font-semibold">
               <a>My Order</a>
-            </li>
+            </li>}
 
             <li onClick={handleLogOut} className="text-[#ff4d2d] font-semibold">
               <a>Log Out</a>

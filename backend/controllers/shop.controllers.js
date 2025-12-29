@@ -42,9 +42,10 @@ export const createAndEditShop = async (req, res) => {
 // Get the current logged-in user's shop with owner and items details
 export const getMyShop = async (req, res) => {
   try {
-    let shop = await Shop.findOne({ owner: req.userId }).populate(
-      "owner items"
-    );
+    let shop = await Shop.findOne({ owner: req.userId }).populate("owner").populate({
+            path:"items",
+            options:{sort:{updatedAt:-1}}
+        })
 
     if (!shop) {
       return res.status(404).json({ message: "Shop not found" });

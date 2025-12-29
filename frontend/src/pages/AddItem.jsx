@@ -211,7 +211,7 @@ function AddItem() {
             }`}
           >
             {!loading ? (
-              "Save"
+              "Add Item"
             ) : (
               <div className="flex justify-center">
                 <ThreeCircles
