@@ -1,10 +1,10 @@
 import React from "react";
 
-function CategoryCard({ name,image }) {
+function ShopMyCityCard({ name, image }) {
   return (
     <div className="flex flex-col items-center gap-2 cursor-pointer relative">
       {/* Image wrapper */}
-      <div className="relative w-[120px] h-[120px] sm:w-[140px] sm:h-[140px] lg:w-[160px] lg:h-[160px] rounded-2xl overflow-hidden group lg:hover:border lg:hover:border-orange-500">
+      <div className="relative w-[150px] h-[120px] sm:w-[200px] sm:h-[150px] lg:w-[300px] lg:h-[250px] rounded-2xl overflow-hidden group lg:hover:border lg:hover:border-orange-500">
         <img
           src={image}
           alt={name}
@@ -28,4 +28,4 @@ function CategoryCard({ name,image }) {
   );
 }
 
-export default CategoryCard;
+export default ShopMyCityCard;

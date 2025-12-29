@@ -11,12 +11,14 @@ import { ThreeCircles } from 'react-loader-spinner'
 import CreateEditShop from './pages/CreateEditShop'
 import AddItem from './pages/AddItem'
 import EditItem from './pages/EditItem'
+import useGetShopByCity from './hooks/useGetShopByCity'
 export const serverUrl = import.meta.env.VITE_SERVER_URL
 function App() {
   
   useGetCurrentUser()
   useGetCity()
   useGetMyShop()
+  useGetShopByCity()
 
   const {userData, loading} = useSelector(state=>state.user)
   // loader

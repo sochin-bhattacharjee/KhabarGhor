@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-@keyframes seamless {
+@keyframes seamless-left {
   from {
     transform: translateX(0);
   }
@@ -10,7 +10,16 @@
   }
 }
 
-.animate-seamless {
-  animation: seamless 10s linear infinite;
+@keyframes seamless-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
+/* Right → Left (Normal speed) */
+.animate-seamless-left {
+  animation: seamless-left 40s linear infinite;
+}
