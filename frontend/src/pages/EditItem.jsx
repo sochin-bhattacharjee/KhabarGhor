@@ -1,21 +1,24 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaUtensils } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { serverUrl } from "../App";
 import { setMyShopData } from "../redux/slice/ownerSlice/ownerSlice";
 import { toast } from "react-toastify";
 import { ThreeCircles } from "react-loader-spinner";
 import { AiFillCaretDown } from "react-icons/ai";
 
-function AddItem() {
+function EditItem() {
   const navigate = useNavigate();
+  const [currentItem, setCurrentItem] = useState(null);
+  const { itemId } = useParams();
   const { myShopData } = useSelector((state) => state.owner);
   const [open, setOpen] = useState(false);
+
   const [category, setCategory] = useState("");
-  const [foodType, setFoodType] = useState("veg");
+  const [foodType, setFoodType] = useState("");
   const categories = [
     "Snacks",
     "Starters",
@@ -64,19 +67,44 @@ function AddItem() {
         formData.append("image", backendImage);
       }
       const result = await axios.post(
-        `${serverUrl}/api/item/add-item`,
+        `${serverUrl}/api/item/edit-item/${itemId}`,
         formData,
         { withCredentials: true }
       );
       dispatch(setMyShopData(result.data));
       setLoading(false);
       navigate("/");
-      toast.success("Food Item Added Successfully");
+      toast.success("Edit Food Item Successfully");
     } catch (error) {
       toast.error(error.response.data.message);
       setLoading(false);
     }
   };
+
+  // Get ItemBy Id data
+  useEffect(() => {
+    const handleGetItemById = async () => {
+      try {
+        const result = await axios.get(
+          `${serverUrl}/api/item/get-by-id/${itemId}`,
+          { withCredentials: true }
+        );
+        setCurrentItem(result.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    handleGetItemById();
+  }, [itemId]);
+
+//   
+useEffect(()=>{
+setName(currentItem?.name || "")
+setPrice(currentItem?.price || null)
+setCategory(currentItem?.category || "")
+setFoodType(currentItem?.foodType || "")
+setFrontendImage(currentItem?.image || "")
+},[currentItem])
 
   return (
     <div className="flex justify-center flex-col items-center p-6 bg-gradient-to-br from-orange-50 to-white relative min-h-screen">
@@ -95,7 +123,7 @@ function AddItem() {
             <FaUtensils className="text-[#ff4d2d] w-16 h-16" />
           </div>
           <div className="text-gray-900 font-extrabold text-3xl">
-            Add Food Item
+            Edit Food Item
           </div>
         </div>
         {/* form div */}
@@ -232,4 +260,4 @@ function AddItem() {
   );
 }
 
-export default AddItem;
+export default EditItem;
