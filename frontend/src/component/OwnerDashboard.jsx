@@ -96,10 +96,10 @@ function OwnerDashboard() {
                 Share your delicious creations with our customers by adding them to the menu
               </p>
               <button
-                onClick={() => navigate("/add-food")}
+                onClick={() => navigate("/add-item")}
                 className="bg-[#ff4d2d] text-white px-5 sm:px-6 py-2 rounded-full font-medium shadow-md hover:bg-orange-600 transition-colors duration-200 cursor-pointer"
               >
-                Add Food
+                Add Item
               </button>
             </div>
           </div>

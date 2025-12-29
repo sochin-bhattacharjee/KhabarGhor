@@ -32,7 +32,8 @@ const itemSchema = new mongoose.Schema({
             "Beverages",
             "Ice Cream",
             "Bakery",
-            "Street Food"
+            "Street Food",
+            "Others"
         ],
         required: true
     },

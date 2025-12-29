@@ -9,6 +9,7 @@ import useGetMyShop from './hooks/useGetMyShop'
 import { useSelector } from 'react-redux'
 import { ThreeCircles } from 'react-loader-spinner'
 import CreateEditShop from './pages/CreateEditShop'
+import AddItem from './pages/AddItem'
 export const serverUrl = import.meta.env.VITE_SERVER_URL
 function App() {
   
@@ -41,6 +42,7 @@ function App() {
       <Route path='/signin' element={!userData ? <SignIn/> : <Navigate to={"/"}/>}/>
       <Route path='/forgot-password' element={!userData ? <ForgotPassword/> : <Navigate to={"/"}/>}/>
       <Route path='/create-edit-shop' element={userData ? <CreateEditShop/> : <Navigate to={"/"}/>}/>
+      <Route path='/add-item' element={userData ? <AddItem/> : <Navigate to={"/"}/>}/>
     </Routes>
   )
 }
