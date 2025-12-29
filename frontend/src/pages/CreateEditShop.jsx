@@ -51,6 +51,7 @@ function CreateEditShop() {
       );
       dispatch(setMyShopData(result.data));
       setLoading(false);
+      navigate("/")
       toast.success("Shop Added Successfully");
     } catch (error) {
       toast.error(error.response.data.message);
